@@ -25,5 +25,5 @@
     <string name="live_tv_package" translatable="false"></string>
 
     <!-- Tiles per row in the grid, and the most apps the dock can hold. -->
-    <integer name="columns">4</integer>
+    <integer name="columns">6</integer>
 </resources>
