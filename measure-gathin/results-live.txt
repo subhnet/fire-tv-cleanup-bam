@@ -1,0 +1,54 @@
+
+[19.25.59] HOME LATENCY (Netflix -> Home) x3
+Warning: Activity not started, its current task has been brought to the front
+  run 1 : gathin home in 5s
+  run 2 : gathin home in 5.5s
+  run 3 : gathin home in 5.8s
+  median: 5.5s
+
+SETTLING 3 MIN...
+MEMORY SAMPLES x3 (30s apart):
+MemAvailable:     305468 kB
+SwapFree:         218332 kB
+MemAvailable:     301072 kB
+SwapFree:         218556 kB
+MemAvailable:     306508 kB
+SwapFree:         219180 kB
+
+IDLE TOP:
+  PID USER         PR  NI VIRT  RES  SHR S[%CPU] %MEM     TIME+ ARGS                       
+
+14231 shell        20   0 5.9M 3.3M 2.7M R 22.5   0.3   0:00.11 top -b -n 1 -m 10
+  805 bluetooth    20   0 858M  29M  25M S  6.4   3.2   1:33.65 com.android.bluetooth
+  340 audioserver  20   0  74M 4.2M 3.3M S  6.4   0.4   1:34.36 audioserver
+  244 root         RT   0    0    0    0 S  6.4   0.0   0:54.53 [btmtk_main_serv]
+  299 bluetooth    20   0  13M 2.2M 2.0M S  3.2   0.2   0:30.90 android.hardware.bluetooth@1.0-service-mediatek
+  255 root         10 -10    0    0    0 S  3.2   0.0   0:02.82 [main_thread]
+14070 u0_a80       20   0 829M  82M  76M S  0.0   9.0   0:00.47 com.amazon.diode
+13983 u0_a145      20   0 817M  71M  67M S  0.0   7.8   0:00.24 com.amazon.device.lowstoragemanager
+13754 u0_a140      20   0 849M  92M  84M S  0.0  10.2   0:00.97 com.amazon.tv.devicecontrol
+13681 u0_a212      20   0 839M  90M  84M S  0.0  10.0   0:00.54 com.amazon.adep
+
+LAUNCHER JANK (12x DPAD_RIGHT):
+Total frames rendered: 42
+Janky frames: 35 (83.33%)
+50th percentile: 31ms
+90th percentile: 46ms
+95th percentile: 65ms
+99th percentile: 150ms
+Number Missed Vsync: 6
+Number High input latency: 30
+Number Slow UI thread: 5
+Number Slow bitmap uploads: 2
+Number Slow issue draw commands: 3
+
+NETFLIX COLD START x3:
+  run 1 : 1108ms
+  run 2 : 1195ms
+  run 3 : 972ms
+  median: 1108ms
+ObjectNotFound: C:\Users\subhr\projects\fire-tv-cleanup\measure_gathin.ps1:76
+Line |
+  76 |  & $Adb -s $Serial exec-out screencap -p > "$Out\gathin-home.png"
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | Cannot find drive. A drive with the name 'Starting' does not exist.

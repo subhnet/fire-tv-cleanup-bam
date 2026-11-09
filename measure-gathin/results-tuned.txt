@@ -1,0 +1,55 @@
+=== JANK: dock row (12x DPAD_RIGHT) ===
+Total frames rendered: 11
+Janky frames: 8 (72.73%)
+50th percentile: 25ms
+90th percentile: 57ms
+95th percentile: 61ms
+99th percentile: 61ms
+Number Missed Vsync: 3
+Number High input latency: 2
+Number Slow UI thread: 6
+Number Slow bitmap uploads: 0
+Number Slow issue draw commands: 3
+=== JANK: row below dock (12x DPAD_RIGHT) ===
+Total frames rendered: 57
+Janky frames: 19 (33.33%)
+50th percentile: 10ms
+90th percentile: 22ms
+95th percentile: 23ms
+99th percentile: 27ms
+Number Missed Vsync: 0
+Number High input latency: 51
+Number Slow UI thread: 3
+Number Slow bitmap uploads: 0
+Number Slow issue draw commands: 0
+Warning: Activity not started, its current task has been brought to the front
+--- home latency run 1 (Home pressed at unix 1794233944.532) ---
+
+11-09 14:19:07.649 +0000 20087 20087 I [7mHomeRedirect[0m: home screen: opening launcher
+11-09 14:19:08.453 +0000 20087 20087 I [7mHomeRedirect[0m: home screen: opening launcher
+11-09 14:19:12.319 +0000   538   564 I ActivityManager: [7mDisplayed com.gathin[0m.tvhome/.MainActivity: +649ms
+--- home latency run 2 (Home pressed at unix 1794233957.698) ---
+11-09 14:19:20.563 +0000 20087 20087 I [7mHomeRedirect[0m: home screen: opening launcher
+11-09 14:19:20.696 +0000 20087 20087 I [7mHomeRedirect[0m: home screen: opening launcher
+11-09 14:19:24.604 +0000   538   564 I ActivityManager: [7mDisplayed com.gathin[0m.tvhome/.MainActivity: +280ms
+netflix cold run 1 : 1083ms
+netflix cold run 2 : 1008ms
+--- meminfo ---
+MemAvailable:     274788 kB
+SwapFree:         167456 kB
+--- idle top ---
+  PID USER         PR  NI VIRT  RES  SHR S[%CPU] %MEM     TIME+ ARGS                       
+
+22965 shell        20   0 5.9M 3.2M 2.6M R 21.8   0.3   0:00.12 top -b -n 1 -m 8
+  805 bluetooth    20   0 858M  23M  20M S  6.2   2.5   2:56.20 com.android.bluetooth
+  340 audioserver  20   0  75M 3.9M 3.0M S  6.2   0.4   2:59.16 audioserver
+19772 root         20   0    0    0    0 S  3.1   0.0   0:00.30 [kworker/1:2]
+  299 bluetooth    20   0  13M 2.2M 2.0M S  3.1   0.2   0:58.56 android.hardware.bluetooth@1.0-service-mediatek
+  244 root         RT   0    0    0    0 D  3.1   0.0   1:43.39 [btmtk_main_serv]
+   26 root         25   5    0    0    0 S  3.1   0.0   0:24.84 [ksmd]
+22887 u0_a172      20   0 1.1G  93M  84M S  0.0  10.3   0:00.95 com.jio.media.stb.ondemand
+ObjectNotFound: C:\Users\subhr\projects\fire-tv-cleanup\measure_gathin_v2.ps1:65
+Line |
+  65 |  & $Adb -s $Serial exec-out screencap -p > "$Out\gathin-tuned-home.png .
+     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | Cannot find drive. A drive with the name 'Starting' does not exist.

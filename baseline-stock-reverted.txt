@@ -1,0 +1,29 @@
+# Stock-after-revert baseline (the honest "before" for the gathin launcher trial)
+# Device : Fire TV Stick 4K Max (AFTSSS), Fire OS 7.7.1.7, 192.168.29.20:5555
+# Date   : 2026-11-09, ~2h after reverting the WebView launcher (com.tvbox.home)
+# Method : 5 min settle, 3 meminfo samples 30s apart, then Netflix cold starts x3
+#
+# Context for comparison:
+#   - Original pre-debloat stock baseline: MemAvailable 268 MB idle, Netflix median 979 ms
+#     (Default Project\before\summary.json)
+#   - With WebView launcher (com.tvbox.home): MemAvailable 96-170 MB, kswapd0 56-81% CPU,
+#     iowait 41-150%, Netflix median 1669 ms, launcher jank 95% / 36 ms p50
+
+## Settled memory (3 samples, 30s apart)
+MemAvailable: 241132 / 260472 / 268548 kB   (median 260 MB)
+SwapFree:     187792 / 241120 / 242584 kB   (swap used ~150-205 MB, stable)
+
+## Idle CPU (after settle)
+323% idle, 0% iowait. kswapd0 NOT in top. system_server 43% (transient), no thrashing.
+
+## Netflix cold start x3 (settled)
+run 1: 1053 ms
+run 2: 1056 ms
+run 3: 1210 ms
+median: 1056 ms   (baseline stock 979 ms; WebView launcher era 1669 ms)
+
+## Interpretation
+The stick is back to stock health: MemAvailable ~260 MB matches the original
+268 MB baseline, swap is stable, no swap thrashing, and Netflix cold starts are
+within ~8% of the original stock median (1056 vs 979 ms; device-to-device noise).
+The revert is COMPLETE and VERIFIED.

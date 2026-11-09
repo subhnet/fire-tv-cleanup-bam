@@ -1,5 +1,12 @@
 # fire-tv-cleanup
 
+> **⚠ This is a personal fork** ([subhnet/fire-tv-cleanup-bam](https://github.com/subhnet/fire-tv-cleanup-bam))
+> with on-device tuning for a **Fire TV Stick 4K Max (AFTSSS, 922 MB RAM)**:
+> a dock config for this stick, launcher performance fixes for low-RAM devices,
+> and Windows (PowerShell) install/restore/measure tooling.
+> Everything about the changes, measured results, and how to revert is in
+> **[README-BAM.md](README-BAM.md)** (summary) and [TRIAL-NOTES.md](TRIAL-NOTES.md) (full record).
+
 **Your TV, minus the ads.** Debloat an Android TV, Google TV or Fire TV over ADB and give it a
 clean launcher with a macOS-style dock. Hand the prompt to Claude Code or any coding assistant,
 answer a few questions about which apps you use, and it does the rest on the real TV.
