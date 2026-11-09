@@ -186,6 +186,18 @@
                 android:overScrollMode="never"
                 android:scrollbars="none"
                 android:descendantFocusability="afterDescendants" />
+
+            <!-- Subtle hint that more apps are below the dock. -->
+            <ImageView
+                android:id="@+id/moreBelow"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="6dp"
+                android:alpha="0"
+                android:src="@drawable/ic_chevron_down"
+                android:importantForAccessibility="no"
+                android:focusable="false" />
         </FrameLayout>
     </LinearLayout>
 

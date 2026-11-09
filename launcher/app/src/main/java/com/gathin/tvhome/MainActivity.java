@@ -85,6 +85,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private ImageView bgPhoto;
     private int bgRes;
     private TextView btnWifi;
+    private View moreBelow;
     private SpringAnimation springX, springY;
     private float glassTargetX, glassTargetY;
     private boolean glassShown;
@@ -138,6 +139,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         greeting = findViewById(R.id.greeting);
         bgPhoto = findViewById(R.id.bgPhoto);
         btnWifi = findViewById(R.id.btnWifi);
+        moreBelow = findViewById(R.id.moreBelow);
 
         grid = findViewById(R.id.grid);
         // One span unit per cell of any dock size 1..COLUMNS: the dock row splits evenly, grid rows are COLUMNS wide.
@@ -169,10 +171,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             }
         });
 
-        // Keep the glass glued to its tile while the grid scrolls.
+        // Keep the glass glued to its tile while the grid scrolls; refresh the "more below" hint.
         grid.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView rv, int dx, int dy) {
+                updateMoreBelow();
                 if (!glassShown) return;
                 glassTargetY -= dy;
                 if (springY.isRunning()) springY.animateToFinalPosition(glassTargetY);
@@ -253,9 +256,20 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         // Return to the tile we left from, or the first one.
         grid.post(() -> {
             View focused = getCurrentFocus();
-            if (focused != null && grid.findContainingViewHolder(focused) != null) return;
+            if (focused != null && grid.findContainingViewHolder(focused) != null) { updateMoreBelow(); return; }
             focusTile(lastFocused);
+            updateMoreBelow();
         });
+    }
+
+    /** Hint shown only while on the dock and there are app rows below to discover. */
+    private void updateMoreBelow() {
+        if (moreBelow == null || adapter == null) return;
+        boolean show = adapter.isDocked(lastFocused) && adapter.getItemCount() > adapter.dockCount();
+        float target = show ? 0.65f : 0f;
+        if (Math.abs(moreBelow.getAlpha() - target) < 0.01f) return;
+        moreBelow.animate().cancel();
+        moreBelow.animate().alpha(target).setDuration(180).start();
     }
 
     @Override
@@ -281,6 +295,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             return;
         }
         magnifyDock(-1);
+        updateMoreBelow();
         // Tile rect in root coordinates, using layout positions (ignores the scale animation).
         Rect r = new Rect(0, 0, card.getWidth(), card.getHeight());
         root.offsetDescendantRectToMyCoords(card, r);
@@ -326,6 +341,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         int dy = decoratedTop - grid.getPaddingTop();
         if (Math.abs(dy) > 1) grid.smoothScrollBy(0, dy);
         magnifyDock(position);
+        updateMoreBelow();
         Rect r = new Rect(0, 0, card.getWidth(), card.getHeight());
         root.offsetDescendantRectToMyCoords(card, r);
         r.offset(0, -dy);
