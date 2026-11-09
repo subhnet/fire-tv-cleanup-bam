@@ -21,6 +21,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -60,6 +61,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     /** Tiles per row and dock slots (res/values/config.xml, columns). Set in onCreate. */
     static int COLUMNS = 4;
     private static final long MINUTE_MS = 60_000L;
+    /** App-list re-query floor: warm resumes inside this window skip the PackageManager scan. */
+    private static final long RELOAD_MS = 5 * 60_000L;
+    private long lastReloadAt;
     private String liveTvPkg;
 
     private AppAdapter adapter;
@@ -180,7 +184,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         springX = new SpringAnimation(glass, DynamicAnimation.TRANSLATION_X);
         springY = new SpringAnimation(glass, DynamicAnimation.TRANSLATION_Y);
         for (SpringAnimation s : new SpringAnimation[]{springX, springY}) {
-            s.setSpring(new SpringForce().setStiffness(260f).setDampingRatio(0.58f));
+            // Near-critical damping: still settles softly, but without the long
+            // underdamped oscillation that dominated frame time on 1 GB sticks.
+            s.setSpring(new SpringForce().setStiffness(320f).setDampingRatio(0.85f));
         }
 
         View btnInputs = findViewById(R.id.btnInputs);
@@ -228,8 +234,15 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         heroName.setAlpha(0f);
         dockDot.setAlpha(0f);
         ambient.setAlpha(0f);
-        adapter.reload();
-        grid.scheduleLayoutAnimation();
+        // Warm resume inside RELOAD_MS: skip the PackageManager scan (labels + icon
+        // decodes on the UI thread) so Home returns render instantly. Cold starts
+        // (lastReloadAt == 0) still load fresh data.
+        if (SystemClock.elapsedRealtime() - lastReloadAt > RELOAD_MS) {
+            adapter.reload();
+            lastReloadAt = SystemClock.elapsedRealtime();
+        }
+        // No layout-animation replay on resume: the staggered tile pop-in plays
+        // once on cold create; warm Home returns show the grid immediately.
         updateGreeting();
         updateBackground();
         updateWifiLabel();
@@ -334,12 +347,15 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             card.setPivotY(card.getHeight());
             card.animate().scaleX(s).scaleY(s).translationY(-lift * density)
                     .setDuration(220).setInterpolator(new DecelerateInterpolator()).start();
-            // The shadow grows from the same point (the icon's bottom centre) so it stays under the icon.
+            // The shadow snaps to the same target with no animator: it waits under the
+            // icon's landing spot while the card flies in. Halves the animators per
+            // dock move, which is what the 922 MB stick can actually afford.
             View shadow = item.findViewById(R.id.shadow);
             shadow.setPivotX(shadow.getWidth() / 2f);
             shadow.setPivotY(card.getBottom() - shadow.getTop());
-            shadow.animate().scaleX(s).scaleY(s).translationY(-lift * density)
-                    .setDuration(220).setInterpolator(new DecelerateInterpolator()).start();
+            shadow.setScaleX(s);
+            shadow.setScaleY(s);
+            shadow.setTranslationY(-lift * density);
         }
     }
 
@@ -360,10 +376,9 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             ambient.animate().alpha(1f).setDuration(600).start();
             heroShown = true;
         } else if (color != ambientColor) {
-            ambient.animate().alpha(0.35f).setDuration(200).withEndAction(() -> {
-                setAmbient(color);
-                ambient.animate().alpha(1f).setDuration(500).start();
-            }).start();
+            // Swap the tint in place. The old two-stage alpha dance animated a
+            // full-screen gradient for ~700 ms on every dock move.
+            setAmbient(color);
         }
     }
 
