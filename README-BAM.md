@@ -99,13 +99,18 @@ launcher's Settings button → Use Amazon Home Screen**, or
 `adb shell settings put secure enabled_accessibility_services null` and set it back to
 `com.gathin.tvhome/com.gathin.tvhome.HomeRedirectService` later.
 
-### 4. Screensaver wallpapers — Indian mix (built, **not yet installed**)
+### 4. Screensaver wallpapers — Indian mix (installed)
 Replaced `saver_01–12.jpg` (screensaver) with 12 freely licensed Indian wallpapers
 from Wikimedia Commons (monuments + landscapes: Taj Mahal, Hampi, Hawa Mahal, Golden
 Temple, Varanasi ghats, Kerala backwaters, Ladakh, Munnar, Meghalaya, White Rann of
-Kutch, Gokarna, Valley of Flowers). Time-of-day `bg_*` backgrounds unchanged.
-Attribution: [`CREDITS.md`](CREDITS.md) and [`saver-credits.json`](saver-credits.json).
-**APK rebuilt (11.1 MB); not installed on the TV until you confirm.**
+Kutch, Gokarna, Valley of Flowers). Attribution: [`CREDITS.md`](CREDITS.md) and
+[`saver-credits.json`](saver-credits.json).
+
+### 5. Time-of-day backgrounds — Indian wallpapers (installed)
+`MainActivity` now uses `bg_morning_india.jpg`, `bg_afternoon_india.jpg`,
+`bg_evening_india.jpg`, `bg_night_india.jpg` (1920×1080 JPEG, minimalistic, user-provided).
+Original upstream `bg_*.jpg` files remain unused in the tree. Source/license for the
+`*_india` images to be recorded in [`CREDITS.md`](CREDITS.md).
 
 ## Files added by this fork
 

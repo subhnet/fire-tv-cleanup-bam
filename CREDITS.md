@@ -22,16 +22,31 @@ Replaced in this fork with freely licensed images from [Wikimedia Commons](https
 | `saver_11.jpg` | Om Beach, Gokarna | Sourabh.biswas003 | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) | [Commons](https://commons.wikimedia.org/wiki/File:PXL_20260103_101009613_People_and_Beach_Om_Beach_Gokarna,_Karnataka_23.jpg) |
 | `saver_12.jpg` | Valley of Flowers, Uttarakhand | Guptaele | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) | [Commons](https://commons.wikimedia.org/wiki/File:Valley_of_Flowers_National_Park_35.JPG) |
 
-### Time-of-day backgrounds (`bg_morning/afternoon/evening/night.jpg`) — upstream (unchanged)
+### Time-of-day backgrounds — Indian wallpapers (this fork, in use)
 
-These remain the original Unsplash photos from upstream, used under the [Unsplash License](https://unsplash.com/license):
+`MainActivity` now uses `bg_morning_india.jpg`, `bg_afternoon_india.jpg`,
+`bg_evening_india.jpg`, `bg_night_india.jpg` (optimized to 1920×1080 JPEG in this repo).
 
-| File | Photo | Photographer |
+| File | Used as | Source / license |
 |---|---|---|
-| `bg_morning.jpg` | [Skyline over the water](https://unsplash.com/photos/a-city-skyline-with-a-body-of-water-in-the-foreground-KWTHWm7JPao) | [@philton88](https://unsplash.com/@philton88) |
-| `bg_afternoon.jpg` | [High-rise buildings](https://unsplash.com/photos/brown-and-gray-high-rise-buildings-MMdf6NlivGs) | [@eejermaine](https://unsplash.com/@eejermaine) |
-| `bg_evening.jpg` | [Bird's-eye view at sunset](https://unsplash.com/photos/birds-eye-photography-of-high-rise-buildings-DitA7EZdgoM) | [@emilianobar](https://unsplash.com/@emilianobar) |
-| `bg_night.jpg` | [Midtown from above](https://unsplash.com/photos/aerial-phto-of-buildings-2SZIcxGzTj8) | [@ruddymedia](https://unsplash.com/@ruddymedia) |
+| `bg_morning_india.jpg` | Morning background | User-provided; source & license **to be confirmed** |
+| `bg_afternoon_india.jpg` | Afternoon background | User-provided; source & license **to be confirmed** |
+| `bg_evening_india.jpg` | Evening background | User-provided; source & license **to be confirmed** |
+| `bg_night_india.jpg` | Night background | User-provided; source & license **to be confirmed** |
+
+> **Attribution needed:** replace the placeholders above with author, source URL, and license
+> once known (especially if this repo is public), to keep redistribution compliant.
+
+### Time-of-day backgrounds (`bg_morning/afternoon/evening/night.jpg`) — upstream originals (unused)
+
+The original Unsplash files remain in the tree but are no longer referenced by the app:
+
+| File | Photo | Photographer | License |
+|---|---|---|---|
+| `bg_morning.jpg` | [Skyline over the water](https://unsplash.com/photos/a-city-skyline-with-a-body-of-water-in-the-foreground-KWTHWm7JPao) | [@philton88](https://unsplash.com/@philton88) | [Unsplash License](https://unsplash.com/license) |
+| `bg_afternoon.jpg` | [High-rise buildings](https://unsplash.com/photos/brown-and-gray-high-rise-buildings-MMdf6NlivGs) | [@eejermaine](https://unsplash.com/@eejermaine) | [Unsplash License](https://unsplash.com/license) |
+| `bg_evening.jpg` | [Bird's-eye view at sunset](https://unsplash.com/photos/birds-eye-photography-of-high-rise-buildings-DitA7EZdgoM) | [@emilianobar](https://unsplash.com/@emilianobar) | [Unsplash License](https://unsplash.com/license) |
+| `bg_night.jpg` | [Midtown from above](https://unsplash.com/photos/aerial-phto-of-buildings-2SZIcxGzTj8) | [@ruddymedia](https://unsplash.com/@ruddymedia) | [Unsplash License](https://unsplash.com/license) |
 
 ## Fonts
 

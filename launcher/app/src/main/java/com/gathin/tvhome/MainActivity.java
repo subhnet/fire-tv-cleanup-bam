@@ -610,7 +610,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private static final int[] GREETINGS = {
             R.string.good_morning, R.string.good_afternoon, R.string.good_evening, R.string.good_night};
     private static final int[] BACKGROUNDS = {
-            R.drawable.bg_morning, R.drawable.bg_afternoon, R.drawable.bg_evening, R.drawable.bg_night};
+            R.drawable.bg_morning_india, R.drawable.bg_afternoon_india,
+            R.drawable.bg_evening_india, R.drawable.bg_night_india};
 
     private static int dayPart() {
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
