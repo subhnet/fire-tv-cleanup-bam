@@ -93,6 +93,16 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private float density;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
+    /** Self-retry when the app list is (still) empty - e.g. a reload that ran while
+     *  the boot was still settling, or a first query that returned nothing. */
+    private final Runnable emptyReload = new Runnable() {
+        @Override public void run() {
+            if (adapter == null || adapter.getItemCount() > 0) return;
+            adapter.reload();
+            if (adapter.getItemCount() > 0) lastReloadAt = SystemClock.elapsedRealtime();
+            else handler.postDelayed(this, 30_000L);
+        }
+    };
     private static final int COLOR_WARN = 0xFFFFB340;   // connected, no internet
     private static final int COLOR_ERROR = 0xFFFF5A52;  // no network
     private static final int[] WIFI_ICONS = {R.drawable.ic_wifi_1, R.drawable.ic_wifi_2, R.drawable.ic_wifi};
@@ -237,12 +247,24 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         heroName.setAlpha(0f);
         dockDot.setAlpha(0f);
         ambient.setAlpha(0f);
-        // Warm resume inside RELOAD_MS: skip the PackageManager scan (labels + icon
-        // decodes on the UI thread) so Home returns render instantly. Cold starts
-        // (lastReloadAt == 0) still load fresh data.
-        if (SystemClock.elapsedRealtime() - lastReloadAt > RELOAD_MS) {
+        // Warm-resume cache: skip the PackageManager scan (labels + icon decodes on
+        // the UI thread) when a fresh list was loaded < RELOAD_MS ago. Three rules:
+        //  - lastReloadAt == 0: never loaded in this process -> always load.
+        //    (elapsedRealtime() is SMALL right after boot, so it cannot be used as
+        //    a proxy for "never loaded" - that mistake skipped the first reload
+        //    after every power-on and left the dock empty.)
+        //  - an empty result is never cached: a failed/too-early query is retried
+        //    on every resume instead of sticking for the cache window.
+        //  - otherwise: age of the last successful load gates the rescan.
+        if (lastReloadAt == 0 || SystemClock.elapsedRealtime() - lastReloadAt > RELOAD_MS) {
             adapter.reload();
-            lastReloadAt = SystemClock.elapsedRealtime();
+            if (adapter.getItemCount() > 0) lastReloadAt = SystemClock.elapsedRealtime();
+        }
+        // Safety net: still empty (very early boot, remote-pairing dialog chaos) ->
+        // retry in the background until the list materializes.
+        if (adapter.getItemCount() == 0) {
+            handler.removeCallbacks(emptyReload);
+            handler.postDelayed(emptyReload, 15_000L);
         }
         // No layout-animation replay on resume: the staggered tile pop-in plays
         // once on cold create; warm Home returns show the grid immediately.
@@ -276,6 +298,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     protected void onPause() {
         super.onPause();
         handler.removeCallbacks(minuteTick);
+        handler.removeCallbacks(emptyReload);
         ConnectivityManager cm = getSystemService(ConnectivityManager.class);
         if (cm != null) cm.unregisterNetworkCallback(networkCallback);
     }
