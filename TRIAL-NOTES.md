@@ -81,6 +81,19 @@ Grid navigation — the main browsing surface — is now SMOOTHER than stock Ama
 (4 icons). Home-latency total is dominated by Fire OS's own 2-2.7 s home-appear
 time, which no launcher can change (identical on stock).
 
+## Post-install fixes (2026-11-11)
+1. **Power-on stranding (user-reported).** After powering on the stick the launcher
+   never appeared and Home did nothing while on Amazon's home. Cause: upstream's
+   3-min boot window in onServiceConnected; on this stick the accessibility binding
+   lands ~11 min after power-on (boot load 4+), past the window, and no window-state
+   event ever fires again. Fix: open launcher unconditionally on service connect
+   (commit 3a43ebf4).
+2. **Screensaver fell back to stock after sleep/TV-off.** Fire OS has a second key,
+   screensaver_default_component, for the sleep path; only screensaver_components
+   (idle path) was set. Both now set by install; restore handles both; backup file
+   records both. Idle path verified on-device (DreamController starts PhotoDream).
+3. Screensaver wallpapers replaced with Indian set (159e4af5) - user preference.
+
 ## Undo (verified reboot-proof for the same setting class on this device)
 pwsh -NoProfile -File .\restore_gathin.ps1 -Serial 192.168.29.20:5555
 (uses settings put secure enabled_accessibility_services null — NOT "" —
