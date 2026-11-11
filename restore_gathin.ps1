@@ -21,9 +21,20 @@ if ($Backup -and (Test-Path $Backup)) {
   } else {
     & $Adb -s $Serial shell settings put secure screensaver_components "$saver"
   }
+  $m = Select-String -Path $Backup -Pattern '^screensaver_default_component=(.*)$'
+  if ($m) {
+    $saverDef = $m.Matches.Groups[1].Value
+    Write-Host "Restoring screensaver_default_component='$saverDef'"
+    if ($saverDef -eq "" -or $saverDef -eq "null") {
+      & $Adb -s $Serial shell settings put secure screensaver_default_component null
+    } else {
+      & $Adb -s $Serial shell settings put secure screensaver_default_component "$saverDef"
+    }
+  }
 } else {
-  Write-Host "No backup file found; clearing screensaver_components."
+  Write-Host "No backup file found; clearing screensaver settings."
   & $Adb -s $Serial shell settings put secure screensaver_components null
+  & $Adb -s $Serial shell settings put secure screensaver_default_component null
 }
 
 # Disable the Home redirect. MUST be the literal `null`, NOT "": Fire OS
@@ -36,7 +47,7 @@ if ($Backup -and (Test-Path $Backup)) {
 Write-Host "Uninstalling com.gathin.tvhome..."
 & $Adb -s $Serial uninstall com.gathin.tvhome
 
-Write-Host "`nState (all three should read null/0 and no service bound):"
-& $Adb -s $Serial shell "settings get secure enabled_accessibility_services; settings get secure accessibility_enabled; settings get secure screensaver_components"
+Write-Host "`nState (all should read null/0 and no service bound):"
+& $Adb -s $Serial shell "settings get secure enabled_accessibility_services; settings get secure accessibility_enabled; settings get secure screensaver_components; settings get secure screensaver_default_component"
 & $Adb -s $Serial shell "dumpsys accessibility | grep -c 'gathin'"
 Write-Host "`nReboot the stick once to confirm the redirect stays dead, then turn ADB debugging off."

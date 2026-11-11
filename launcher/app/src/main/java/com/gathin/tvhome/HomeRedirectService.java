@@ -31,7 +31,6 @@ public class HomeRedirectService extends AccessibilityService {
     private static final String AMAZON_HOME = "HomeActivity";
     private static final String[] SETTINGS_APPS = {"com.amazon.tv.settings", "com.amazon.tv.quicksettings"};
     private static final long SETTINGS_GRACE_MS = 2000;     // measured: settings window -> home flash ~200 ms
-    private static final long BOOT_WINDOW_MS = 3 * 60_000;  // service connecting this soon after boot = boot
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Runnable redirect = this::openLauncher;
@@ -39,7 +38,15 @@ public class HomeRedirectService extends AccessibilityService {
 
     @Override
     protected void onServiceConnected() {
-        if (SystemClock.elapsedRealtime() < BOOT_WINDOW_MS) openLauncher();
+        // Always come forward on (re)connect. On slow sticks (922 MB, load 4+ after
+        // power-on) this service can bind many minutes after boot - well past any
+        // boot window - and by then Amazon's home is already resumed, so no
+        // window-state event will ever fire again and the user is stranded on
+        // Amazon's home with a Home button that does nothing. Verified on AFTSSS:
+        // binding happened ~11 min after boot; upstream's 3-min boot window missed
+        // it. Rebinds mid-session are rare (bound services are foreground priority),
+        // and opening the home screen on re-enable is the expected behaviour anyway.
+        openLauncher();
     }
 
     @Override

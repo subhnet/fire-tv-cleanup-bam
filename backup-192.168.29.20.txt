@@ -1,2 +1,3 @@
 screensaver_components=com.amazon.ftv.screensaver/.app.services.ScreensaverService
 enabled_accessibility_services=null
+screensaver_default_component=com.amazon.ftv.screensaver/.app.services.ScreensaverService

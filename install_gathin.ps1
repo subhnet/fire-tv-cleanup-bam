@@ -18,10 +18,12 @@ if (Test-Path $backup) {
   Write-Host "Backup $(Split-Path $backup -Leaf) exists - keeping original values (re-install run)."
 } else {
   $saver = ((& $Adb -s $Serial shell settings get secure screensaver_components) -join '').Trim()
+  $saverDef = ((& $Adb -s $Serial shell settings get secure screensaver_default_component) -join '').Trim()
   $acs   = ((& $Adb -s $Serial shell settings get secure enabled_accessibility_services) -join '').Trim()
   "screensaver_components=$saver"  | Set-Content -Path $backup -Encoding ascii
   "enabled_accessibility_services=$acs" | Add-Content -Path $backup -Encoding ascii
-  Write-Host "Backed up to $backup (screensaver='$saver', accessibility='$acs')"
+  "screensaver_default_component=$saverDef" | Add-Content -Path $backup -Encoding ascii
+  Write-Host "Backed up to $backup (screensaver='$saver', default='$saverDef', accessibility='$acs')"
 }
 
 # 2. Install.
@@ -35,6 +37,9 @@ Write-Host "Installing com.gathin.tvhome..."
 & $Adb -s $Serial shell settings put secure enabled_accessibility_services com.gathin.tvhome/com.gathin.tvhome.HomeRedirectService
 & $Adb -s $Serial shell settings put secure accessibility_enabled 1
 & $Adb -s $Serial shell settings put secure screensaver_components com.gathin.tvhome/com.gathin.tvhome.PhotoDream
+# Sleep-path screensaver: Fire OS also has screensaver_default_component (used when the
+# stick sleeps / TV off), which otherwise falls back to Amazon's stock screensaver.
+& $Adb -s $Serial shell settings put secure screensaver_default_component com.gathin.tvhome/com.gathin.tvhome.PhotoDream
 
 # 5. Open it once.
 & $Adb -s $Serial shell am start -n com.gathin.tvhome/.MainActivity | Out-Null
